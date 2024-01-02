@@ -40,7 +40,7 @@ namespace AccountantManagementApp.DAL.Services
         }
 
         public string Delete()
-        {
+        { 
             //write your code here
             throw new NotImplementedException();
         }

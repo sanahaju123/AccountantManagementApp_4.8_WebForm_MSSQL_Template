@@ -23,60 +23,46 @@ namespace AccountantManagementApp
                 BindGridView();
             }
         }
-
+        static string ID;
         private void BindGridView()
         {
-            var accountants = _accountantService.GetAll();
-            _dataLayer.fillgridView(accountants, gv);
+            var query = _accountantService.GetAll();
+            _dataLayer.fillgridView(query, gv);
         }
 
         protected void gv_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var id = gv.SelectedRow.Cells[1].Text;
-            // Retrieve the accountant details and populate the form
-            var accountant = _accountantService.GetById(id);
-            if (accountant != null)
-            {
-                txtFirstName.Text = accountant.FirstName;
-                txtLastName.Text = accountant.LastName;
-                txtDateOfBirth.Text = accountant.DateOfBirth.ToString("yyyy-MM-dd");
-            }
+            ID = gv.SelectedRow.Cells[1].Text.ToString();
+            txtFirstName.Text = gv.SelectedRow.Cells[2].Text.ToString();
+            txtLastName.Text = gv.SelectedRow.Cells[3].Text.ToString();
+            txtDateOfBirth.Text = gv.SelectedRow.Cells[4].Text.ToString();
         }
 
-        protected void btnsave_Click(object sender, EventArgs e)
+        protected void btnSave_Click(object sender, EventArgs e)
         {
-            var newAccountant = new AccountantModel
-            {
-                FirstName = txtFirstName.Text,
-                LastName = txtLastName.Text,
-                DateOfBirth = DateTime.Parse(txtDateOfBirth.Text)
-            };
-
-            _accountantService.Add();
-            BindGridView();
+            var query = _accountantService.Add();
+            string qry = query + txtFirstName.Text + "','" + txtLastName.Text + "','" + txtDateOfBirth.Text + "')";
+            lblMessage.Text = _dataLayer.insertUpdateCreateOrDelete(qry);
+            txtFirstName.Text = "";
+            txtLastName.Text = "";
+            txtDateOfBirth.Text = "";
         }
 
-        protected void btnupdate_Click(object sender, EventArgs e)
+        protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            string id = gv.SelectedRow.Cells[1].Text.ToString();
-            var existingAccountant = _accountantService.GetById(id);
-
-            if (existingAccountant != null)
-            {
-                existingAccountant.LastName = txtLastName.Text;
-                existingAccountant.FirstName = txtFirstName.Text;
-                existingAccountant.DateOfBirth = DateTime.Parse(txtDateOfBirth.Text);
-
-                _accountantService.Update();
-                BindGridView();
-            }
+            var query = _accountantService.Update();
+            string qry = query + txtFirstName.Text + "',LastName='" + txtLastName.Text + "',DateOfBirth='" + txtDateOfBirth.Text+"'";
+            lblMessage.Text = _dataLayer.insertUpdateCreateOrDelete(qry);
+            txtFirstName.Text = "";
+            txtLastName.Text = "";
+            txtDateOfBirth.Text = "";
         }
 
-        protected void btndlt_Click(object sender, EventArgs e)
+        protected void btnDelete_Click(object sender, EventArgs e)
         {
-            string id = gv.SelectedRow.Cells[1].Text.ToString();
-            _accountantService.Delete();
-            BindGridView();
+            var query = _accountantService.Delete();
+            string qry = query + ID + "'";
+            lblMessage.Text = _dataLayer.insertUpdateCreateOrDelete(qry);
         }
     }
 }

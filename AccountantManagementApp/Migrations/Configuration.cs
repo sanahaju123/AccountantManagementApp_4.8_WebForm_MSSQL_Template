@@ -1,4 +1,4 @@
-﻿namespace AccountantManagementApp.Migrations
+﻿namespace TaskManagementApp.Migrations
 {
     using System;
     using System.Data.Entity;
